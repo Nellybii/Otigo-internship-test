@@ -11,18 +11,18 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/fx.json")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
+    const fetchCurrencies = async () => {
+      try {
+        const response = await fetch("/fx.json");
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return res.json();
-      })
-      .then((data) => {
+        const data = await response.json();
+
         if (Array.isArray(data.fx)) {
           const formattedData = data.fx.map((item) => {
             const exchangeRate = item.exchangeRate || {};
-            const flagCode = item.currency ? item.currency.slice(0,2).toLowerCase() : "";
+            const flagCode = item.currency ? item.currency.slice(0, 2).toLowerCase() : "";
             const countryName = item.nameI18N;
             const flagUrl = `/flags/flags/${flagCode}.png`;
 
@@ -30,22 +30,23 @@ const App = () => {
               country: countryName,
               currency: item.currency,
               code: item.currency,
-              buy: exchangeRate.buy,
-              sell: exchangeRate.sell,
-              rate: exchangeRate.middle,
+              buy: exchangeRate.buy || "N/A",
+              sell: exchangeRate.sell || "N/A",
+              rate: exchangeRate.middle || "N/A",
               flag: flagUrl,
             };
           });
-          console.log(formattedData)
-
+          
           setCurrencies(formattedData);
         } else {
           console.error("Data.fx is not an array:", data.fx);
         }
-      })
-      .catch((err) => {
-        console.error("Error fetching data:", err);
-      });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchCurrencies();
   }, []);
 
   const filteredCurrencies = useFilteredCurrencies(currencies, searchTerm);
@@ -55,15 +56,10 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header component */}
+    <div className="min-h-screen bg-gray-50 m-20">
       <Header />
-
-      {/* Sticky Search Bar */}
       <SearchBar onSearch={setSearchTerm} />
-
-      {/* Content section with padding-top to avoid overlap with sticky search bar */}
-      <div className="pt-24"> {/* Adjust pt-24 for proper spacing */}
+      <div className="pt-24">
         <CurrencyList currencies={filteredCurrencies} onCurrencyClick={handleClick} />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -6,9 +6,17 @@ const SearchBar = ({ onSearch }) => {
   const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    onSearch(term); 
+    onSearch(term);
     window.location.hash = term;
   };
+
+  useEffect(() => {
+    const hashTerm = window.location.hash.slice(1);
+    if (hashTerm) {
+      setSearchTerm(hashTerm);
+      onSearch(hashTerm);
+    }
+  }, [onSearch]);
 
   return (
     <div className="sticky top-0 bg-white z-10 shadow-md">
