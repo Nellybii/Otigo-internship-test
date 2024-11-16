@@ -26,7 +26,7 @@ const SearchBar = ({ onSearch }) => {
           value={searchTerm}
           onChange={handleSearch}
           placeholder="Search by country or code..."
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>

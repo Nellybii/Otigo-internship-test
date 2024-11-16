@@ -2,7 +2,7 @@ import React from "react";
 
 const CurrencyList = ({ currencies, onCurrencyClick }) => {
   return (
-    <div className="currency-list">
+    <div className="overflow-x-auto">
       <table className="table-auto w-full text-left border-collapse border border-gray-200">
         <thead>
           <tr className="bg-gray-100">
@@ -16,12 +16,17 @@ const CurrencyList = ({ currencies, onCurrencyClick }) => {
         </thead>
         <tbody>
           {currencies.map((currency, index) => (
-            <tr key={index} className="hover:bg-gray-50">
+            <tr
+              key={index}
+              onClick={() => onCurrencyClick(currency.code)}
+              className="hover:bg-blue-100 cursor-pointer"
+            >
               <td className="border px-4 py-2 text-center">
                 <img
                   src={currency.flag}
                   alt={`${currency.country} flag`}
-                  className="inline-block w-6 h-4"
+                  className="inline-block w-6 h-4 rounded"
+                  onError={(e) => (e.target.src = "/fallback-flag.png")}
                 />
               </td>
               <td className="border px-4 py-2">{currency.currency}</td>

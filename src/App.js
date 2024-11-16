@@ -22,7 +22,9 @@ const App = () => {
         if (Array.isArray(data.fx)) {
           const formattedData = data.fx.map((item) => {
             const exchangeRate = item.exchangeRate || {};
-            const flagCode = item.currency ? item.currency.slice(0, 2).toLowerCase() : "";
+            const flagCode = item.currency
+              ? item.currency.slice(0, 2).toLowerCase()
+              : "";
             const countryName = item.nameI18N;
             const flagUrl = `/flags/flags/${flagCode}.png`;
 
@@ -36,7 +38,7 @@ const App = () => {
               flag: flagUrl,
             };
           });
-          
+
           setCurrencies(formattedData);
         } else {
           console.error("Data.fx is not an array:", data.fx);
@@ -60,7 +62,10 @@ const App = () => {
       <Header />
       <SearchBar onSearch={setSearchTerm} />
       <div className="pt-24">
-        <CurrencyList currencies={filteredCurrencies} onCurrencyClick={handleClick} />
+        <CurrencyList
+          currencies={filteredCurrencies}
+          onCurrencyClick={handleClick}
+        />
       </div>
     </div>
   );
